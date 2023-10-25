@@ -3,6 +3,9 @@ import pandas as pd
 
 app = FastAPI()
 
+@app.get("/")
+def read_root():
+    return {"message": "¡API de la empresa!"}
 # Suponemos que ya has cargado tu DataFrame en una variable 'df'
 
 @app.get("/developer/{desarrollador}")
