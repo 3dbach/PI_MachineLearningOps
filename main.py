@@ -5,65 +5,66 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "¡API de la empresa Omar Baruch!"}
+    return {"message": "¡API de la empresa Omar!"}
 
 # Cargar los datos y preparar el DataFrame
-#steam_games = pd.read_csv('./data/steam_games.csv')
+#steam_games = pd.read_csv('steam_games.csv')
 #steam_games['release_date'] = pd.to_datetime(steam_games['release_date'], errors='coerce')
 #steam_games['year'] = steam_games['release_date'].dt.year
 
 import pandas as pd
 
 # Cargar el archivo user_reviews.csv y mostrar las primeras filas
-user_reviews_df = pd.read_csv("./data/user_reviews.csv")
+user_reviews_df = pd.read_csv("user_reviews.csv")
 user_reviews_df.head()
 
 # Cargar el archivo steam_games.csv y mostrar las primeras filas
-steam_games_df = pd.read_csv("./data/steam_games.csv")
-steam_games_df.head()
+steam_games_df = pd.read_csv("steam_games.csv")
+steam_games_df.head()pip 
 
 # Cargar el archivo items_muestramitad.csv y mostrar las primeras filas
-items_muestramitad_df = pd.read_csv("./data/items_muestramitad.csv")
+items_muestramitad_df = pd.read_csv("items_muestramitad.csv")
 items_muestramitad_df.head()
 
 @app.get("/developer/{desarrollador}")
 def developer(desarrollador: str):
- 
-    # Cargar los datos y preparar el DataFrame
-    
-    steam_games_df['release_date'] = pd.to_datetime(steam_games_df['release_date'], errors='coerce')
-    steam_games_df['year'] = steam_games_df['release_date'].dt.year  
-    # Convertir el nombre del desarrollador a minúsculas para la comparación
-    developer_df = steam_games_df[steam_games_df['developer'].str.lower() == desarrollador.lower()]
+    try:  
+        # Cargar los datos y preparar el DataFrame
+        steam_games = pd.read_csv('steam_games.csv')
+        steam_games['release_date'] = pd.to_datetime(steam_games['release_date'], errors='coerce')
+        steam_games['year'] = steam_games['release_date'].dt.year  
+        # Convertir el nombre del desarrollador a minúsculas para la comparación
+        developer_df = steam_games[steam_games['developer'].str.lower() == desarrollador.lower()]
 
-    # Verificar si encontramos registros para el desarrollador
-    if developer_df.empty:
-        return {"error": "Desarrollador no encontrado"}
+        # Verificar si encontramos registros para el desarrollador
+        if developer_df.empty:
+            return {"error": "Desarrollador no encontrado"}
 
-    # Agrupar por año
-    grouped = developer_df.groupby('year')
+        # Agrupar por año
+        grouped = developer_df.groupby('year')
         
-    # Contar la cantidad total de juegos por año
-    total_games = grouped.size()
+        # Contar la cantidad total de juegos por año
+        total_games = grouped.size()
         
-    # Contar la cantidad de juegos que son "Free to Play" o "Free To Play" por año
-    free_games = developer_df[developer_df['price'].isin(['Free to Play', 'Free To Play'])].groupby('year').size()
+        # Contar la cantidad de juegos que son "Free to Play" o "Free To Play" por año
+        free_games = developer_df[developer_df['price'].isin(['Free to Play', 'Free To Play'])].groupby('year').size()
         
-    # Crear un diccionario con los resultados
-    result = {
-        'Año': list(total_games.index),
-        'Cantidad de Items': list(total_games.values),
-        'Contenido Free': list((free_games / total_games * 100).fillna(0).round(2))
+        # Crear un diccionario con los resultados
+        result = {
+            'Año': list(total_games.index),
+            'Cantidad de Items': list(total_games.values),
+            'Contenido Free': list((free_games / total_games * 100).fillna(0).round(2))
         }
-    print(steam_games_df.head())  # Verifica si el DataFrame se cargó correctamente
-    print(developer_df)  # Verifica si el filtrado por desarrollador funciona
+        print(steam_games.head())  # Verifica si el DataFrame se cargó correctamente
+        print(developer_df)  # Verifica si el filtrado por desarrollador funciona
 
-    return result
-
+        return result
+    except Exception as e:
+        return {"error": str(e)}
 
 """
 # Cargar los datos y preparar el DataFrame (como en el notebook)
-steam_games = pd.read_csv('./data/steam_games.csv')
+steam_games = pd.read_csv('steam_games.csv')
 steam_games['release_date'] = pd.to_datetime(steam_games['release_date'], errors='coerce')
 steam_games['year'] = steam_games['release_date'].dt.year
 
