@@ -7,7 +7,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "¡API de Omar Baru!"}
+    return {"message": "¡API de Omar Baruc!"}
 
 # carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_e1.csv", encoding="utf-8")
@@ -24,6 +24,8 @@ steam_games_df.head()
 items_muestramitad_df = pd.read_csv("./data/items_muestramitad.csv")
 items_muestramitad_df.head()
 
+steam_games_df1['release_date'] = pd.to_datetime(steam_games_df1['release_date'], errors='coerce', infer_datetime_format=True)
+steam_games_df1['year'] = steam_games_df1['release_date'].dt.year
 
 
 @app.get("/developer/{desarrollador}")
@@ -31,8 +33,9 @@ def developer(desarrollador: str):
  
     # Cargar los datos y preparar el DataFrame
     
-    steam_games_df1['release_date'] = pd.to_datetime(steam_games_df1['release_date'], errors='coerce')
-    steam_games_df1['year'] = steam_games_df1['release_date'].dt.year  
+    #steam_games_df1['release_date'] = pd.to_datetime(steam_games_df1['release_date'], errors='coerce')
+    #steam_games_df1['year'] = steam_games_df1['release_date'].dt.year  
+
     # Convertir el nombre del desarrollador a minúsculas para la comparación
     developer_df = steam_games_df1[steam_games_df1['developer'].str.lower() == desarrollador.lower()]
 
@@ -44,20 +47,17 @@ def developer(desarrollador: str):
     grouped = developer_df.groupby('year')
         
     # Contar la cantidad total de juegos por año
-    total_games = grouped.size()
+    total_games = grouped.size().astype(int)  # Convert to Python int
         
     # Contar la cantidad de juegos que son "Free to Play" o "Free To Play" por año
-    free_games = developer_df[developer_df['price'].isin(['Free to Play', 'Free To Play'])].groupby('year').size()
+    free_games = developer_df[developer_df['price'].isin(['Free to Play', 'Free To Play'])].groupby('year').size().astype(int)  # Convert to Python int
         
-    #diccionario con los resultados
+    # Diccionario con los resultados
     result = {
         'Año': list(total_games.index),
         'Cantidad de Items': list(total_games.values),
         'Contenido Free': list((free_games / total_games * 100).fillna(0).round(2))
         }
-    #print(steam_games_df1.head())  # Verifica si el DataFrame se cargó correctamente
-    #print(developer_df)  # Verifica si el filtrado por desarrollador funciona
-
     return result
 
 
