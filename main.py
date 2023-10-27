@@ -7,21 +7,21 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "¡API de Omar B!"}
+    return {"message": "¡API de Omar Baruch!"}
 
 # carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_e1.csv", encoding="utf-8")
 
 # Cargar el archivo user_reviews.csv y mostrar las primeras filas
-user_reviews_df = pd.read_csv("./data/user_reviews.csv")
+user_reviews_df = pd.read_csv("./data/user_reviews.csv", encoding="utf-8")
 user_reviews_df.head()
 
 # Cargar el archivo steam_games.csv y mostrar las primeras filas
-steam_games_df = pd.read_csv("./data/steam_games.csv")
+steam_games_df = pd.read_csv("./data/steam_games.csv", encoding="utf-8")
 steam_games_df.head()
 
 # Cargar el archivo items_muestramitad.csv y mostrar las primeras filas
-items_muestramitad_df = pd.read_csv("./data/items_muestramitad.csv")
+items_muestramitad_df = pd.read_csv("./data/items_muestramitad.csv", encoding="utf-8")
 items_muestramitad_df.head()
 
 steam_games_df1['release_date'] = pd.to_datetime(steam_games_df1['release_date'], errors='coerce', infer_datetime_format=True)
@@ -59,9 +59,6 @@ def developer(desarrollador: str):
 
 
 @app.get("/userdata/{User_id}")
-#def userdata(User_id: str):
-    # Aquí iría el código para procesar y devolver los datos del usuario.
-    #pass
 def userdata(User_id: str):
     # Filtrar las revisiones del usuario en user_reviews.csv
     user_reviews = user_reviews_df[user_reviews_df['user_id'] == User_id]
@@ -86,9 +83,9 @@ def userdata(User_id: str):
 
     return {
         "Usuario": User_id,
-        "Dinero gastado": f"{total_spent} USD",
-        "% de recomendación": f"{recommendation_percentage:.2f}%",
-        "cantidad de items": total_items
+        "Dinero gastado": f"{float(total_spent)} USD",   # Convertir explícitamente a float
+        "% de recomendación": f"{float(recommendation_percentage):.2f}%",  # Convertir explícitamente a float
+        "cantidad de items": int(total_items)  # Convertir explícitamente a int
     }
 
 
