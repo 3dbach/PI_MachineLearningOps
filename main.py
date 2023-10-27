@@ -7,7 +7,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "¡API de Omar Ba!"}
+    return {"message": "¡API de Omar B!"}
 
 # carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_e1.csv", encoding="utf-8")
@@ -41,18 +41,20 @@ def developer(desarrollador: str):
     grouped = developer_df.groupby('year')
         
     # Contar la cantidad total de juegos por año
-    total_games = grouped.size().astype(int).tolist()  # Convert to Python int
+    total_games_values = grouped.size().astype(int).tolist()  # Convert to Python int
+    total_games_index = [int(year) for year in grouped.size().index]  # Convert index to Python int list
         
     # Contar la cantidad de juegos que son "Free to Play" o "Free To Play" por año
     free_games = developer_df[developer_df['price'].isin(['Free to Play', 'Free To Play'])].groupby('year').size().astype(int).tolist()  # Convert to Python int
         
     # Diccionario con los resultados
     result = {
-        'Año': [int(year) for year in total_games.index],
-        'Cantidad de Items': total_games,
-        'Contenido Free': [(free / total * 100).round(2) for free, total in zip(free_games, total_games)]
+        'Año': total_games_index,
+        'Cantidad de Items': total_games_values,
+        'Contenido Free': [(free / total * 100).round(2) for free, total in zip(free_games, total_games_values)]
         }
     return result
+
 
 
 
