@@ -7,7 +7,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "¡API de Omar Baruch!"}
+    return {"message": "¡API de Omar Bac!"}
 
 # carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_uno.csv", encoding="utf-8")
@@ -17,7 +17,7 @@ user_reviews_df = pd.read_csv("./data/user_reviews.csv", encoding="utf-8")
 user_reviews_df.head()
 
 # Cargar el archivo steam_games.csv y mostrar las primeras filas
-steam_games_df = pd.read_csv("./data/steam_games.csv", encoding="utf-8")
+steam_games_df = pd.read_csv("./data/steam_games.csv", encoding="u_tf-8")
 steam_games_df.head()
 
 # Cargar el archivo items_muestramitad.csv y mostrar las primeras filas
@@ -45,16 +45,26 @@ def developer(desarrollador: str):
     total_games_index = [int(year) for year in grouped.size().index]  # Convert index to Python int list
         
     # Contar la cantidad de juegos que son "Free to Play" o "Free To Play" por año
-    free_games = developer_df[developer_df['price'].isin(['Free to Play', 'Free To Play'])].groupby('year').size().astype(int).tolist()  # Convert to Python int
+    #free_games = developer_df[developer_df['price'].isin(['Free to Play', 'Free To Play'])].groupby('year').size().astype(int).tolist()  # Convert to Python int
         
+    # Diccionario con los resultados
+   # result = {
+    #    'Año': total_games_index,
+    #    'Cantidad de Items': total_games_values,
+    #    'Contenido Free': [(free / total * 100).round(2) for free, total in zip(free_games, total_games_values)]
+    #    }
+    #return result
+
+    # Contar la cantidad de juegos que son "Free to Play" (codificados como 0) por año
+    free_games = developer_df[developer_df['price'] == 0].groupby('year').size().astype(int).tolist()  # Convert to Python int
+
     # Diccionario con los resultados
     result = {
         'Año': total_games_index,
         'Cantidad de Items': total_games_values,
-        'Contenido Free': [(free / total * 100).round(2) for free, total in zip(free_games, total_games_values)]
-        }
+        'Contenido Free': [(free / total * 100).round(2) if total else 0 for free, total in zip(free_games, total_games_values)]
+    }
     return result
-
 
 
 
