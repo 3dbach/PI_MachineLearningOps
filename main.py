@@ -7,13 +7,13 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "¡API de Omar Bac!"}
+    return {"message": "¡API de Omar Bach!"}
 
 # carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_uno.csv", encoding="utf-8")
 
 # Cargar el dataframe dos
-final_df = pd.read_csv('dataset_dos_limpio.csv', encoding="utf-8")
+final_df = pd.read_csv('./data/dataset_dos_limpio.csv', encoding="utf-8")
 
 # Cargar el archivo user_reviews.csv y mostrar las primeras filas
 user_reviews_df = pd.read_csv("./data/user_reviews.csv", encoding="utf-8")
