@@ -7,7 +7,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "¡API de Omar Baruc!"}
+    return {"message": "¡API de Omar Baruch!"}
 
 # carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_uno.csv", encoding="utf-8")
@@ -26,6 +26,9 @@ steam_games_cleaned= pd.read_csv("./data/dataset_tres_games.csv", encoding="utf-
 # Cargar el archivo items
 items_cleaned= pd.read_csv("./data/dataset_tres_items_reducido.csv", encoding="utf-8")
 
+
+# Cargar el dataframe cuatro
+df4 = pd.read_csv('dataset_cuatro.csv', encoding="utf-8")
 
 # Cargar el archivo user_reviews.csv y mostrar las primeras filas
 user_reviews_df = pd.read_csv("./data/user_reviews.csv", encoding="utf-8")
@@ -127,6 +130,23 @@ def UserForGenre(genero: str):
 
 @app.get("/best_developer_year/{año}")
 
+def best_developer_year(año: int,):
+    # Filtrar los juegos que fueron lanzados en el año especificado
+    games_of_year = df4[df4['release_date'].str.startswith(str(año), na=False)]
+    
+    # Filtrar las revisiones que tienen recommend como True
+    recommended_reviews = games_of_year[games_of_year['recommend'] == True]
+    
+    # Agrupar por developer y contar las recomendaciones
+    developer_counts = recommended_reviews.groupby('developer').size().reset_index(name='recommendations')
+    top_developers = developer_counts.sort_values(by='recommendations', ascending=False).head(3)
+    
+    # Preparar la lista de resultados
+    results = [{"Puesto {}".format(i+1): dev} for i, dev in enumerate(top_developers['developer'])]
+    
+    return results    
+
+"""
 def best_developer_year(año: int):
     # Filtrar los juegos que fueron lanzados en el año especificado
     games_of_year = steam_games_df[steam_games_df['release_date'].str.startswith(str(año), na=False)]
@@ -146,7 +166,7 @@ def best_developer_year(año: int):
     
     return results
 
-
+"""
 
 
 @app.get("/developer_reviews_analysis/{desarrolladora}")
