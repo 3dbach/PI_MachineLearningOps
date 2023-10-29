@@ -7,7 +7,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "¡API de Omar Bach!"}
+    return {"message": "¡API de Omar Baruch!"}
 
 # carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_uno.csv", encoding="utf-8")
@@ -108,14 +108,13 @@ def userdata(User_id: str):
 
 
 
-
 @app.get("/UserForGenre/{genero}")
 
-def UserForGenre_test(genero: str):
-    # Filtrar los juegos que pertenecen al género especificado
+def UserForGenre(genero: str):
+    # Filtrar los juegos que pertenecen al género especificado en steam_games.csv
     games_in_genre = steam_games_cleaned[steam_games_cleaned['genres'].str.contains(genero, na=False, case=False)]
     
-    # Vincular los juegos filtrados con reduced_items_cleaned para obtener las horas jugadas de cada juego por cada usuario
+    # Vincular los juegos filtrados con items_muestramitad.csv para obtener las horas jugadas de cada juego por cada usuario
     user_playtime = games_in_genre.merge(items_cleaned, left_on='id', right_on='item_id', how='inner')
     
     # Agrupar por user_id y sumar las horas jugadas para encontrar el usuario con más horas jugadas
@@ -123,7 +122,7 @@ def UserForGenre_test(genero: str):
     top_user = user_total_playtime.sort_values(by='playtime_forever', ascending=False).iloc[0]['user_id']
     
     # Agrupar por release_date y sumar las horas jugadas para cada año
-    hours_by_year = user_playtime.groupby(user_playtime['release_date'].dt.year)['playtime_forever'].sum().reset_index()
+    hours_by_year = user_playtime.groupby(user_playtime['release_date'].str[:4])['playtime_forever'].sum().reset_index()
     hours_by_year = hours_by_year.rename(columns={"release_date": "Año", "playtime_forever": "Horas"})
     
     # Convertir el DataFrame a una lista de diccionarios
@@ -133,7 +132,6 @@ def UserForGenre_test(genero: str):
         "Usuario con más horas jugadas para Género {}".format(genero): top_user,
         "Horas jugadas": hours_list
     }
-
 
 
 
