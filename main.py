@@ -15,6 +15,15 @@ steam_games_df1 = pd.read_csv("./data/dataset_uno.csv", encoding="utf-8")
 # Cargar el dataframe dos
 final_df = pd.read_csv('./data/dataset_dos_limpio.csv', encoding="utf-8")
 
+#carga de los dataframes para el endpoint tres
+
+# Cargar el archivo steam_games
+steam_games_cleaned= pd.read_csv("./data/dataset_tres_games.csv", encoding="utf-8")
+
+# Cargar el archivo items
+items_cleaned= pd.read_csv("./data/dataset_tres_items_reducido.csv", encoding="utf-8")
+
+
 # Cargar el archivo user_reviews.csv y mostrar las primeras filas
 user_reviews_df = pd.read_csv("./data/user_reviews.csv", encoding="utf-8")
 user_reviews_df.head()
@@ -102,19 +111,19 @@ def userdata(User_id: str):
 
 @app.get("/UserForGenre/{genero}")
 
-def UserForGenre(genero: str):
-    # Filtrar los juegos que pertenecen al género especificado en steam_games.csv
-    games_in_genre = steam_games_df[steam_games_df['genres'].str.contains(genero, na=False, case=False)]
+def UserForGenre_test(genero: str):
+    # Filtrar los juegos que pertenecen al género especificado
+    games_in_genre = steam_games_cleaned[steam_games_cleaned['genres'].str.contains(genero, na=False, case=False)]
     
-    # Vincular los juegos filtrados con items_muestramitad.csv para obtener las horas jugadas de cada juego por cada usuario
-    user_playtime = games_in_genre.merge(items_muestramitad_df, left_on='id', right_on='item_id', how='inner')
+    # Vincular los juegos filtrados con reduced_items_cleaned para obtener las horas jugadas de cada juego por cada usuario
+    user_playtime = games_in_genre.merge(items_cleaned, left_on='id', right_on='item_id', how='inner')
     
     # Agrupar por user_id y sumar las horas jugadas para encontrar el usuario con más horas jugadas
     user_total_playtime = user_playtime.groupby('user_id')['playtime_forever'].sum().reset_index()
     top_user = user_total_playtime.sort_values(by='playtime_forever', ascending=False).iloc[0]['user_id']
     
     # Agrupar por release_date y sumar las horas jugadas para cada año
-    hours_by_year = user_playtime.groupby(user_playtime['release_date'].str[:4])['playtime_forever'].sum().reset_index()
+    hours_by_year = user_playtime.groupby(user_playtime['release_date'].dt.year)['playtime_forever'].sum().reset_index()
     hours_by_year = hours_by_year.rename(columns={"release_date": "Año", "playtime_forever": "Horas"})
     
     # Convertir el DataFrame a una lista de diccionarios
