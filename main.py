@@ -62,7 +62,7 @@ def developer(desarrollador: str):
     result = {
         'Año': total_games_index,
         'Cantidad de Items': total_games_values,
-        'Contenido Free': [(free / total * 100).round(2) if total else 0 for free, total in zip(free_games, total_games_values)]
+        'Contenido Free': [round(free / total * 100, 2) if total else 0 for free, total in zip(free_games, total_games_values)]
     }
     return result
 
