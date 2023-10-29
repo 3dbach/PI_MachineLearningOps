@@ -17,7 +17,7 @@ user_reviews_df = pd.read_csv("./data/user_reviews.csv", encoding="utf-8")
 user_reviews_df.head()
 
 # Cargar el archivo steam_games.csv y mostrar las primeras filas
-steam_games_df = pd.read_csv("./data/steam_games.csv", encoding="u_tf-8")
+steam_games_df = pd.read_csv("./data/steam_games.csv", encoding="utf-8")
 steam_games_df.head()
 
 # Cargar el archivo items_muestramitad.csv y mostrar las primeras filas
