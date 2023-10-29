@@ -12,6 +12,9 @@ def read_root():
 # carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_uno.csv", encoding="utf-8")
 
+# Cargar el dataframe dos
+final_df = pd.read_csv('dataset_dos_limpio.csv', encoding="utf-8")
+
 # Cargar el archivo user_reviews.csv y mostrar las primeras filas
 user_reviews_df = pd.read_csv("./data/user_reviews.csv", encoding="utf-8")
 user_reviews_df.head()
@@ -70,26 +73,22 @@ def developer(desarrollador: str):
 
 @app.get("/userdata/{User_id}")
 def userdata(User_id: str):
-    # Filtrar las revisiones del usuario en user_reviews.csv
-    user_reviews = user_reviews_df[user_reviews_df['user_id'] == User_id]
-
-    # Vincular las revisiones del usuario con steam_games.csv para obtener el precio de cada juego
-    user_games = user_reviews.merge(steam_games_df, left_on='item_id', right_on='id', how='left')
+    # Filtrar las revisiones del usuario
+    user_reviews = final_df[final_df['user_id'] == User_id].copy()  # Usar .copy() para evitar la advertencia
 
     # Calcular el dinero gastado por el usuario
-    # Convertir la columna de precio a float y manejar casos donde el precio es 'Free To Play' o NaN
-    user_games['price'] = user_games['price'].replace(['Free To Play', 'Free to Play'], 0)
-    user_games['price'] = pd.to_numeric(user_games['price'], errors='coerce').fillna(0)
-    total_spent = user_games['price'].sum()
+    # Convertir la columna de precio a float y manejar casos donde el precio es NaN o 'Free To Play'
+    user_reviews.loc[:, 'price'] = user_reviews['price'].replace(['Free To Play', 'Free to Play'], 0)
+    user_reviews.loc[:, 'price'] = pd.to_numeric(user_reviews['price'], errors='coerce').fillna(0)
+    total_spent = user_reviews['price'].sum()
 
     # Calcular el porcentaje de recomendación
     total_reviews = len(user_reviews)
     recommended_reviews = user_reviews['recommend'].sum()
     recommendation_percentage = (recommended_reviews / total_reviews) * 100 if total_reviews else 0
 
-    # Calcular la cantidad de items del usuario en items_muestramitad.csv
-    user_items = items_muestramitad_df[items_muestramitad_df['user_id'] == User_id]
-    total_items = user_items['items_count'].iloc[0] if not user_items.empty else 0
+    # Calcular la cantidad de items del usuario
+    total_items = user_reviews['items_count'].iloc[0] if not user_reviews.empty else 0
 
     return {
         "Usuario": User_id,
