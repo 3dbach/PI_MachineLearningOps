@@ -28,7 +28,8 @@ items_cleaned= pd.read_csv("./data/dataset_tres_items_reducido.csv", encoding="u
 
 
 # Cargar el dataframe cuatro
-df4 = pd.read_csv('dataset_cuatro.csv', encoding="utf-8")
+df4 = pd.read_csv('./data/dataset_cuatro.csv', encoding="utf-8")
+
 
 # Cargar el archivo user_reviews.csv y mostrar las primeras filas
 user_reviews_df = pd.read_csv("./data/user_reviews.csv", encoding="utf-8")
