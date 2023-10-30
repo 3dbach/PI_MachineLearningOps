@@ -152,19 +152,23 @@ def best_developer_year_updated_v3(año: int):
 
 @app.get("/developer_reviews_analysis/{desarrolladora}")
 
-def developer_reviews_analysis(desarrolladora: str):
+
+def corrected_developer_reviews_analysis(desarrolladora: str):
     # Filtrar los registros por el desarrollador especificado
     developer_data = df45[df45['developer'] == desarrolladora]
     
-    # Contar los registros de análisis de sentimiento positivo y negativo
+    # Contar los registros de análisis de sentimiento negativo, neutro y positivo
     negative_count = len(developer_data[developer_data['sentiment_analysis'] == 0])
-    positive_count = len(developer_data[developer_data['sentiment_analysis'] == 1])
+    neutral_count = len(developer_data[developer_data['sentiment_analysis'] == 1])
+    positive_count = len(developer_data[developer_data['sentiment_analysis'] == 2])
     
     # Preparar el resultado
-    result = {desarrolladora: [f"Negative = {negative_count}", f"Positive = {positive_count}"]}
-    
-    return {
-        desarrolladora: [f"Negative = {negative_count}", 
-        f"Positive = {positive_count}"]
+    result = {
+        desarrolladora: [
+            f"Negative = {negative_count}", 
+            f"Neutral = {neutral_count}",
+            f"Positive = {positive_count}"
+        ]
     }
-
+    
+    return result
