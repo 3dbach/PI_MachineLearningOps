@@ -7,7 +7,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "¡API de Omar Bar!"}
+    return {"message": "¡API de Omar Baruch!"}
 
 # carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_uno.csv", encoding="utf-8")
@@ -28,7 +28,7 @@ items_cleaned= pd.read_csv("./data/dataset_tres_items_reducido.csv", encoding="u
 
 
 # Cargar el dataframe cuatro
-merged_data = pd.read_csv("./data/dataset_cuatro.csv", encoding="utf-8")
+df45= pd.read_csv("./data/dataset_cuatro.csv", encoding="utf-8")
 
 
 # Cargar el archivo user_reviews.csv y mostrar las primeras filas
@@ -130,9 +130,9 @@ def UserForGenre(genero: str):
 
 @app.get("/best_developer_year/{año}")
 
-def best_developer_year_updated_v3(año: int, df=merged_data):
+def best_developer_year_updated_v3(año: int):
     # Filtrar los juegos que fueron lanzados en el año especificado
-    games_of_year = df[df['release_date'] == año]
+    games_of_year = df45[df45['release_date'] == año]
     
     # Filtrar las revisiones que tienen recommend como True
     recommended_reviews = games_of_year[games_of_year['recommend'] == True]
@@ -152,9 +152,9 @@ def best_developer_year_updated_v3(año: int, df=merged_data):
 
 @app.get("/developer_reviews_analysis/{desarrolladora}")
 
-def developer_reviews_analysis(desarrolladora: str, df=merged_data):
+def developer_reviews_analysis(desarrolladora: str):
     # Filtrar los registros por el desarrollador especificado
-    developer_data = df[df['developer'] == desarrolladora]
+    developer_data = df45[df45['developer'] == desarrolladora]
     
     # Contar los registros de análisis de sentimiento positivo y negativo
     negative_count = len(developer_data[developer_data['sentiment_analysis'] == 0])
