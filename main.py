@@ -131,7 +131,7 @@ def UserForGenre(genero: str):
 
 @app.get("/best_developer_year/{año}")
 
-def best_developer_year(año: int,):
+def best_developer_year(año: int):
     # Filtrar los juegos que fueron lanzados en el año especificado
     games_of_year = df4[df4['release_date'].str.startswith(str(año), na=False)]
     
