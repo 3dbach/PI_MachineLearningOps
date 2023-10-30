@@ -130,7 +130,7 @@ def UserForGenre(genero: str):
 
 @app.get("/best_developer_year/{año}")
 
-def best_developer_year_updated(año: int, df=merged_data):
+def best_developer_year_updated_v3(año: int, df=merged_data):
     # Filtrar los juegos que fueron lanzados en el año especificado
     games_of_year = df[df['release_date'] == año]
     
@@ -141,8 +141,10 @@ def best_developer_year_updated(año: int, df=merged_data):
     developer_counts = recommended_reviews.groupby('developer').size().reset_index(name='recommendations')
     top_developers = developer_counts.sort_values(by='recommendations', ascending=False).head(3)
     
-    # Preparar la lista de resultados
-    results = [{"Puesto {}".format(i+1): dev} for i, dev in enumerate(top_developers['developer'])]
+    # Preparar el resultado
+    results = {
+        "Desarrollador top {} para el año {}".format(i+1, año): dev for i, dev in enumerate(top_developers['developer'])
+    }
     
     return results
 
@@ -161,7 +163,8 @@ def developer_reviews_analysis(desarrolladora: str, df=merged_data):
     # Preparar el resultado
     result = {desarrolladora: [f"Negative = {negative_count}", f"Positive = {positive_count}"]}
     
-    return result
+    return {
+        desarrolladora: [f"Negative = {negative_count}", 
+        f"Positive = {positive_count}"]
+    }
 
-# Probar la función para el desarrollador "Valve"
-developer_reviews_analysis("Valve")
