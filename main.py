@@ -26,6 +26,8 @@ steam_games_cleaned= pd.read_csv("./data/dataset_tres_games.csv", encoding="utf-
 # Cargar el archivo items
 items_cleaned= pd.read_csv("./data/dataset_tres_items_reducido.csv", encoding="utf-8")
 
+# Cargar el dataframe cuatro
+dfdf= pd.read_csv("./data/dataset_cuatro.csv", encoding="utf-8")
 
 # Cargar el dataframe cuatro
 df45= pd.read_csv("./data/dataset_cuatro.csv", encoding="utf-8")
@@ -130,23 +132,20 @@ def UserForGenre(genero: str):
 
 @app.get("/best_developer_year/{año}")
 
-def best_developer_year_updated_v3(año: int):
-    # Filtrar los juegos que fueron lanzados en el año especificado
-    games_of_year = df45[df45['release_date'] == año]
+def best_developer_year_corrected(anio: int):
+    # Filtrar el dataframe por el año dado y donde se recomienda el juego y el análisis de sentimiento es positivo
+    filtered_df = dfdf[(dfdf['release_date'] == anio) & (dfdf['recommend'] == True) & (dfdf['sentiment_analysis'] == 2)]
     
-    # Filtrar las revisiones que tienen recommend como True
-    recommended_reviews = games_of_year[games_of_year['recommend'] == True]
+    # Agrupar por desarrollador y contar el número de recomendaciones
+    grouped_df = filtered_df.groupby('developer').size().reset_index(name='recommend_count')
     
-    # Agrupar por developer y contar las recomendaciones
-    developer_counts = recommended_reviews.groupby('developer').size().reset_index(name='recommendations')
-    top_developers = developer_counts.sort_values(by='recommendations', ascending=False).head(3)
+    # Ordenar los desarrolladores por el número de recomendaciones en orden descendente y obtener los primeros 3
+    top_3 = grouped_df.sort_values(by='recommend_count', ascending=False).head(3)
     
-    # Preparar el resultado
-    results = {
-        "Desarrollador top {} para el año {}".format(i+1, año): dev for i, dev in enumerate(top_developers['developer'])
-    }
+    # Convertir el resultado a la estructura deseada
+    result = [{"Puesto {}".format(i+1): row.developer} for i, row in enumerate(top_3.itertuples())]
     
-    return results
+    return result
 
 
 
