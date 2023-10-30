@@ -7,7 +7,7 @@ app = FastAPI()
 
 @app.get("/")
 def read_root():
-    return {"message": "¡API de Omar B!"}
+    return {"message": "¡API de Omar Bar!"}
 
 # carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_uno.csv", encoding="utf-8")
@@ -28,7 +28,7 @@ items_cleaned= pd.read_csv("./data/dataset_tres_items_reducido.csv", encoding="u
 
 
 # Cargar el dataframe cuatro
-df4 = pd.read_csv('./data/dataset_cuatro.csv', encoding="utf-8")
+merged_data = pd.read_csv("./data/dataset_cuatro.csv", encoding="utf-8")
 
 
 # Cargar el archivo user_reviews.csv y mostrar las primeras filas
@@ -128,13 +128,11 @@ def UserForGenre(genero: str):
     }
 
 
-
 @app.get("/best_developer_year/{año}")
 
-
-def best_developer_year_updated(año: int):
+def best_developer_year_updated(año: int, df=merged_data):
     # Filtrar los juegos que fueron lanzados en el año especificado
-    games_of_year = df4[df4['release_date'].str.startswith(str(año), na=False)]
+    games_of_year = df[df['release_date'] == año]
     
     # Filtrar las revisiones que tienen recommend como True
     recommended_reviews = games_of_year[games_of_year['recommend'] == True]
@@ -152,17 +150,18 @@ def best_developer_year_updated(año: int):
 
 @app.get("/developer_reviews_analysis/{desarrolladora}")
 
-def developer_reviews_analysis(desarrolladora: str):
-    # Filtrar los juegos que fueron desarrollados por la desarrolladora especificada
-    developer_games = steam_games_df[steam_games_df['developer'] == desarrolladora]
+def developer_reviews_analysis(desarrolladora: str, df=merged_data):
+    # Filtrar los registros por el desarrollador especificado
+    developer_data = df[df['developer'] == desarrolladora]
     
-    # Vincular los juegos filtrados con user_reviews.csv para obtener las reseñas
-    developer_reviews = developer_games.merge(user_reviews_df, left_on='id', right_on='item_id', how='inner')
+    # Contar los registros de análisis de sentimiento positivo y negativo
+    negative_count = len(developer_data[developer_data['sentiment_analysis'] == 0])
+    positive_count = len(developer_data[developer_data['sentiment_analysis'] == 1])
     
-    # Clasificar las reseñas en "Positive" y "Negative" basado en la columna recommend
-    developer_reviews['sentiment'] = developer_reviews['recommend'].apply(lambda x: 'Positive' if x else 'Negative')
+    # Preparar el resultado
+    result = {desarrolladora: [f"Negative = {negative_count}", f"Positive = {positive_count}"]}
     
-    # Contar la cantidad de reseñas "Positive" y "Negative"
-    sentiment_counts = developer_reviews['sentiment'].value_counts().to_dict()
-    
-    return {desarrolladora: sentiment_counts}
+    return result
+
+# Probar la función para el desarrollador "Valve"
+developer_reviews_analysis("Valve")
