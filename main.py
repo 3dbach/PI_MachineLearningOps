@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import pandas as pd
 
 
@@ -35,6 +35,9 @@ dfdf= pd.read_csv("./data/dataset_cuatro.csv", encoding="utf-8")
 df45= pd.read_csv("./data/dataset_cuatro.csv", encoding="utf-8")
 
 
+#carga de dataframes para la funcion de recomendacion
+item_similarity_df= pd.read_csv("./data/item_similarity_df_ML.csv", encoding="utf-8")
+steam_games_df= pd.read_csv("./data/steam_games_ML.csv", encoding="utf-8")
 
 
 
@@ -162,3 +165,27 @@ def corrected_developer_reviews_analysis(desarrolladora: str):
     }
     
     return result
+
+
+
+@app.get("/recommend_game/")
+def get_game_recommendations(item_id: int, n_recommendations: int = 5):
+    """Endpoint para obtener recomendaciones de juegos basadas en un juego dado."""
+    
+    # Verificar si el item_id existe en item_similarity_df
+    if item_id not in item_similarity_df.index:
+        raise HTTPException(status_code=404, detail="Item no encontrado")
+    
+    # Obtener los juegos más similares al dado
+    similar_games = item_similarity_df[item_id].sort_values(ascending=False)
+    
+    # Filtrar solo los juegos que estén en steam_games_df y obtener los top n_recommendations
+    similar_games = similar_games[similar_games.index.isin(steam_games_df['id'])].head(n_recommendations + 1)
+    
+    # Excluir el mismo juego de la lista de recomendados
+    similar_games = similar_games.drop(item_id, errors='ignore')
+    
+    # Obtener nombres de los juegos recomendados
+    recommended_game_names = steam_games_df.set_index('id').loc[similar_games.index]['app_name'].tolist()
+    
+    return {"recommended_games": recommended_game_names}
