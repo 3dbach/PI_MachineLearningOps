@@ -9,13 +9,13 @@ app = FastAPI()
 def read_root():
     return {"message": "¡API de Omar Baruch!"}
 
-# carga de dataset1 para la funcion 1
+# Carga de dataset1 para la funcion 1
 steam_games_df1 = pd.read_csv("./data/dataset_uno.csv", encoding="utf-8")
 steam_games_df1['release_date'] = pd.to_datetime(steam_games_df1['release_date'], errors='coerce', infer_datetime_format=True)
 steam_games_df1['year'] = steam_games_df1['release_date'].dt.year
 
 
-# Cargar el dataframe dos
+# Cargar el dataframe para la funcion dos
 final_df = pd.read_csv('./data/dataset_dos_limpio.csv', encoding="utf-8")
 
 
@@ -26,24 +26,15 @@ steam_games_cleaned= pd.read_csv("./data/dataset_tres_games.csv", encoding="utf-
 # Cargar el archivo items
 items_cleaned= pd.read_csv("./data/dataset_tres_items_reducido.csv", encoding="utf-8")
 
+
 # Cargar el dataframe cuatro
 dfdf= pd.read_csv("./data/dataset_cuatro.csv", encoding="utf-8")
 
-# Cargar el dataframe cuatro
+
+# Cargar el dataframe para la funcion 5 
 df45= pd.read_csv("./data/dataset_cuatro.csv", encoding="utf-8")
 
 
-# Cargar el archivo user_reviews.csv y mostrar las primeras filas
-user_reviews_df = pd.read_csv("./data/user_reviews.csv", encoding="utf-8")
-user_reviews_df.head()
-
-# Cargar el archivo steam_games.csv y mostrar las primeras filas
-steam_games_df = pd.read_csv("./data/steam_games.csv", encoding="utf-8")
-steam_games_df.head()
-
-# Cargar el archivo items_muestramitad.csv y mostrar las primeras filas
-items_muestramitad_df = pd.read_csv("./data/items_muestramitad.csv", encoding="utf-8")
-items_muestramitad_df.head()
 
 
 
