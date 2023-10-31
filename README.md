@@ -1,6 +1,10 @@
 # PIMlops
 proyecto de machine learnig ops
-[![d4face92a7abc37a414e0bc3acf4ff23ec588438.png](https://i.postimg.cc/qB2vg6KV/d4face92a7abc37a414e0bc3acf4ff23ec588438.png)](https://postimg.cc/6T5Xm3zY)
+
+
+[![1143164-3840x2160-desktop-4k-robot-background-image.jpg](https://i.postimg.cc/P5JHbCCq/1143164-3840x2160-desktop-4k-robot-background-image.jpg)](https://postimg.cc/w7CngTcK)
+
+
 API de Juegos de Steam
 Este proyecto proporciona una API construida con FastAPI para analizar y obtener información sobre juegos de Steam y sus reseñas. La API es capaz de desglosar información basada en diferentes parámetros, permitiendo a los usuarios obtener insights valiosos sobre la dinámica del mercado de juegos y las percepciones de los usuarios.
 
