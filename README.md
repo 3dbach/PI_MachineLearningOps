@@ -43,13 +43,17 @@ Ejecutar la API:
 
 uvicorn main:app --reload
 
-Con estos pasos, la API debería estar ejecutándose en http:
+Con estos pasos, la API debería estar ejecutándose
+
+Para ejecutar esta API en la nube sigue el siguiente enlace : https://pml-b8qh.onrender.com 
+
+Pra ver una demo en YouTube aqui tienes el siguiente enlace: https://youtu.be/LOt3DQj2Y3I?si=z7lCA0aX6WaEXgyd 
 
 Uso
 Después de instalar y ejecutar la API, puedes interactuar con ella directamente a través de la URL mencionada anteriormente o utilizando herramientas como curl o Postman.
 
 Documentación de la API
-FastAPI proporciona una interfaz de usuario interactiva para la documentación de la API. Una vez que la API esté en ejecución, puedes acceder a esta documentación visitando http://127.0.0.1:8000/docs en tu navegador. Aquí, podrás ver todos los endpoints disponibles, los parámetros que aceptan y probarlos en tiempo real.
+FastAPI proporciona una interfaz de usuario interactiva para la documentación de la API. Una vez que la API esté en ejecución, puedes acceder desde tu navegador. Ahí, podrás ver todos los endpoints disponibles, los parámetros que aceptan y probarlos en tiempo real.
 
 Conjuntos de Datos
 Este proyecto utiliza varios archivos CSV que contienen información sobre juegos de Steam y sus reseñas. Los datos han sido recopilados y limpiados para adaptarse a las necesidades de esta API. Si deseas conocer más sobre la fuente original de los datos o cómo se recolectaron, por favor contáctame.
