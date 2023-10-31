@@ -173,6 +173,10 @@ def corrected_developer_reviews_analysis(desarrolladora: str):
 def get_game_recommendations(item_id: int, n_recommendations: int = 5):
     """Endpoint para obtener recomendaciones de juegos basadas en un juego dado."""
     
+    # Verificar si el juego con el ID dado está presente en item_similarity_df
+    if item_id not in item_similarity_df.columns:
+        return {"error": f"Juego con ID {item_id} no encontrado."}
+    
     # Obtener los juegos más similares al dado
     similar_games = item_similarity_df[item_id].sort_values(ascending=False)
     
