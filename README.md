@@ -1,5 +1,5 @@
 # PIMlops
-proyecto de machine learnig ops
+Proyecto Individual Machine Learnig Ops
 
 
 [![1143164-3840x2160-desktop-4k-robot-background-image.jpg](https://i.postimg.cc/P5JHbCCq/1143164-3840x2160-desktop-4k-robot-background-image.jpg)](https://postimg.cc/w7CngTcK)
